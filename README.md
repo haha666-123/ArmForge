@@ -2,7 +2,7 @@
 
 六轴机械臂运动学、轨迹规划与伺服仿真（C++20，零第三方依赖）
 
-[![CI](https://github.com/USER/ArmForge/actions/workflows/ci.yml/badge.svg)](https://github.com/USER/ArmForge/actions/workflows/ci.yml)
+[![CI](https://github.com/haha666-123/ArmForge/actions/workflows/ci.yml/badge.svg)](https://github.com/haha666-123/ArmForge/actions/workflows/ci.yml)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
