@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # ------------------------------------------------------------------ Linux release
+  linux-gcc:
+    name: linux / gcc-13 / release
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build g++-13 gcc-13
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_COMPILER=g++-13 \
+            -DARMFORGE_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+
+      - name: Unit tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Demo run
+        run: ./build/bin/armforge demo
+
+      - name: Benchmark
+        run: ./build/bin/armforge_bench
+
+  # ------------------------------------------------------------------ Linux sanitizers
+  linux-asan:
+    name: linux / gcc-13 / asan+ubsan
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build g++-13 gcc-13
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-asan -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_COMPILER=g++-13 \
+            -DARMFORGE_SANITIZE=ON
+
+      - name: Build
+        run: cmake --build build-asan -j"$(nproc)"
+
+      - name: Unit tests
+        run: ctest --test-dir build-asan --output-on-failure
+
+  # ------------------------------------------------------------------ Windows MSVC
+  windows-msvc:
+    name: windows / msvc / release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DARMFORGE_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build --config Release -j 4
+
+      - name: Unit tests
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Demo run
+        run: .\build\bin\Release\armforge.exe demo
