@@ -18,6 +18,17 @@ option(ARMFORGE_BUILD_TESTS "Build unit tests" ON)
 option(ARMFORGE_BUILD_BENCH "Build benchmarks" ON)
 option(ARMFORGE_SANITIZE "Enable ASan/UBSan (gcc/clang only)" OFF)
 option(ARMFORGE_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
+option(ARMFORGE_STATIC_RUNTIME "Link the C++ runtime statically (portable binaries)" ON)
+
+# Shipping a single .exe that runs on a machine without the MinGW or MSVC
+# redistributables is worth the few extra hundred kilobytes.
+if(ARMFORGE_STATIC_RUNTIME)
+    if(MINGW)
+        add_link_options(-static-libgcc -static-libstdc++ -static)
+    elseif(MSVC)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    endif()
+endif()
 
 find_package(Threads REQUIRED)
 

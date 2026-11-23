@@ -137,6 +137,23 @@ cmake --build build
 .\build\bin\armforge.exe demo
 ```
 
+### Windows 免安装运行（单文件）
+
+```bat
+deploy.bat
+```
+
+脚本会构建、跑测试，然后把可执行文件打包到 `dist\`。默认开启
+`ARMFORGE_STATIC_RUNTIME`，C++ 运行时静态链接，`armforge.exe` 只依赖系统自带的
+`KERNEL32.dll` / `msvcrt.dll`，拷到任何 Windows 10+ 机器都能直接双击运行。
+
+如果显式关掉静态链接（`-DARMFORGE_STATIC_RUNTIME=OFF`），脚本会用 `objdump` 读出 exe
+真正 import 的非系统 DLL，并从 g++ 目录把 `libgcc_s_seh-1.dll`、`libstdc++-6.dll`
+等一起拷进 `dist\`，保证两种情况都不会出现「缺少 XX.dll」。
+
+`run.bat` 是快捷入口：优先跑 `dist\`，没有就退回 `build\`，并透传参数，例如
+`run.bat fk --q "0 -1.2 1.2 0 0.9 0"`。
+
 ### demo 输出（实测）
 
 ```
