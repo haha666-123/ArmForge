@@ -1,0 +1,7 @@
+D:/ArmForge/build-werror/CMakeFiles/armforge_core.dir
+D:/ArmForge/build-werror/CMakeFiles/armforge.dir
+D:/ArmForge/build-werror/CMakeFiles/armforge_tests.dir
+D:/ArmForge/build-werror/CMakeFiles/armforge_bench.dir
+D:/ArmForge/build-werror/CMakeFiles/test.dir
+D:/ArmForge/build-werror/CMakeFiles/edit_cache.dir
+D:/ArmForge/build-werror/CMakeFiles/rebuild_cache.dir

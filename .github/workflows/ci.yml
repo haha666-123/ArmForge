@@ -80,4 +80,11 @@ jobs:
         run: ctest --test-dir build -C Release --output-on-failure
 
       - name: Demo run
-        run: .\build\bin\Release\armforge.exe demo
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path build -Recurse -Filter armforge.exe |
+            Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if (-not $exe) { throw "armforge.exe not found under build/" }
+          Write-Host "running $($exe.FullName)"
+          & $exe.FullName demo
+          if ($LASTEXITCODE -ne 0) { throw "demo exited with $LASTEXITCODE" }
